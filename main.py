@@ -1,6 +1,8 @@
 import pprint
 import copy
 
+visited_nodes = 0
+
 def create_tree(x, y, size_x, size_y):
     moves = [(-4, -1, [(-1, 0), (-2, 0), (-3, 0), (-4, 0), (-4, -1)]),
              (-1, -4, [(0, -1), (0, -2), (0, -3), (0, -4), (-1, -4)]),
@@ -41,6 +43,7 @@ class Node(object):
 
 
 def bfs(d, size_x, size_y):
+    global visited_nodes
     r = {}
     for i in xrange(size_x):
         for j in xrange(size_y):
@@ -49,8 +52,10 @@ def bfs(d, size_x, size_y):
     queue = []
     queue.append(Node((0, 0), None, r, 1))
 
+
     while len(queue) != 0:
-        node = queue.pop()
+        node = queue.pop(0)
+        visited_nodes += 1
         # node.print_room(11, 11)
         for mx, my, moves in create_tree(node.pos[0], node.pos[1], size_x, size_y):
             if not any([node.room[m] for m in moves]):
@@ -81,3 +86,4 @@ room = bfs(5, 11, 11)
 print "We are now done: "
 print room
 room.print_room(11, 11)
+print "We visited " + str(visited_nodes) + " nodes"
