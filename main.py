@@ -1,7 +1,7 @@
 import pprint
 import copy
 
-visited_nodes = 0
+generated_nodes = 0
 
 class Node(object):
 
@@ -50,7 +50,7 @@ class Node(object):
         return Node(position, self, self.room_size, copy.deepcopy(self.room), self.level+1)
 
 def bfs(d, size_x, size_y):
-    global visited_nodes
+    global generated_nodes
     r = {}
     for i in xrange(size_x):
         for j in xrange(size_y):
@@ -61,7 +61,6 @@ def bfs(d, size_x, size_y):
 
     while len(queue) != 0:
         node = queue.pop(0)
-        visited_nodes += 1
         for mx, my, moves in node.possible_moves():
             if not any([node.room[m] for m in moves]):
                 new_node = node.copy(moves[-1])
@@ -71,9 +70,10 @@ def bfs(d, size_x, size_y):
                 if new_node.is_finished(d):
                     return new_node
 
+                generated_nodes += 1
                 queue.append(new_node)
 
 room = bfs(5, 11, 11)
 print "We are now done: "
-room.print_room()
-print "We visited " + str(visited_nodes) + " nodes"
+room.print_room(11, 11)
+print "We generated " + str(generated_nodes) + " nodes"
