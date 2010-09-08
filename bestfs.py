@@ -14,7 +14,7 @@ def create_tree(x, y, size_x, size_y):
 
     for mx, my, move_list in moves:
         if mx+x >= 0 and mx+x < size_x and my+y >= 0 and my+y < size_y:
-            yield mx, my, [(i+x, j+y) for i,j in move_list]
+            yield mx, my, [(i+x, j+y) for i, j in move_list]
 
 
 class Node(object):
@@ -51,7 +51,6 @@ def bfs(d, size_x, size_y):
 
     while len(queue) != 0:
         node = queue.pop()
-        # node.print_room(11, 11)
         for mx, my, moves in create_tree(node.pos[0], node.pos[1], size_x, size_y):
             if not any([node.room[m] for m in moves]):
                 newroom = copy.deepcopy(node.room)
@@ -61,8 +60,6 @@ def bfs(d, size_x, size_y):
                 new_node = Node(moves[-1], node, newroom, node.level+1)
                 if is_finished(newroom, d, size_x, size_y):
                     return new_node
-                # if sum(newroom.values()) >= size_x * size_y - d:
-                    # return node
 
                 queue.append(new_node)
 
