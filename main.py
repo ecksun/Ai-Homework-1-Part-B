@@ -1,10 +1,10 @@
+import itertools
 import copy
 import sys
 
 generated_nodes = 0
 
 class Node(object):
-
     def __init__(self, position, parent, room_size, room, level):
         self.position = position
         self.parent = parent
@@ -14,9 +14,8 @@ class Node(object):
 
     def __str__(self):
         if self.parent:
-            return str(self.parent.position) + ' -> ' + str(self.position) + "\n"
-        else:
-            return "root -> " + str(self.position) + "\n"
+            return '%s -> %s' % (self.parent.position, self.position)
+        return 'root -> %s' % (self.position)
 
     def print_room(self):
         print '-' * self.room_size[1] * 5 + '-'
@@ -51,9 +50,8 @@ class Node(object):
 
 def init_queue(size_x, size_y):
     r = {}
-    for i in xrange(size_x):
-        for j in xrange(size_y):
-            r[(i, j)] = 0
+    for x in itertools.product(xrange(size_x), xrange(size_y)):
+        r[x] = 0
     r[(0, 0)] = 1
     queue = []
     queue.append(Node((0, 0), None, (size_x, size_y), r, 1))
