@@ -1,5 +1,5 @@
-import pprint
 import copy
+import sys
 
 generated_nodes = 0
 
@@ -19,12 +19,12 @@ class Node(object):
             return "root -> " + str(self.position) + "\n"
 
     def print_room(self):
-        print ' --------------------------------------------------------'
-        for i in range(0, self.room_size[0]):
-            for j in range(0, self.room_size[1]):
+        print '-' * self.room_size[1] * 5 + '-'
+        for i in reversed(xrange(0, self.room_size[0])):
+            for j in xrange(0, self.room_size[1]):
                 print '| ' + str(self.room[(i, j)]).rjust(2),
-            print ' |'
-        print ' --------------------------------------------------------'
+            print '|'
+        print '-' * self.room_size[1] * 5 + '-'
 
     def possible_moves(self):
         x = self.position[0]
@@ -47,10 +47,9 @@ class Node(object):
         return sum(x == 0 for x in self.room.values()) <= d
 
     def copy(self, position):
-        return Node(position, self, self.room_size, copy.deepcopy(self.room), self.level+1)
+        return Node(position, self, self.room_size, copy.copy(self.room), self.level+1)
 
-def bfs(d, size_x, size_y):
-    global generated_nodes
+def init_queue(size_x, size_y):
     r = {}
     for i in xrange(size_x):
         for j in xrange(size_y):
@@ -58,7 +57,11 @@ def bfs(d, size_x, size_y):
     r[(0, 0)] = 1
     queue = []
     queue.append(Node((0, 0), None, (size_x, size_y), r, 1))
+    return queue
 
+def bfs(d, size_x, size_y):
+    global generated_nodes
+    queue = init_queue(size_x, size_y)
     while len(queue) != 0:
         node = queue.pop(0)
         for mx, my, moves in node.possible_moves():
@@ -72,8 +75,62 @@ def bfs(d, size_x, size_y):
 
                 generated_nodes += 1
                 queue.append(new_node)
+    return False
 
-room = bfs(5, 11, 11)
-print "We are now done: "
-room.print_room(11, 11)
-print "We generated " + str(generated_nodes) + " nodes"
+def dfs(d, size_x, size_y):
+    global generated_nodes
+    queue = init_queue(size_x, size_y)
+    while len(queue) != 0:
+        node = queue.pop()
+        for mx, my, moves in node.possible_moves():
+            if not any([node.room[m] for m in moves]):
+                new_node = node.copy(moves[-1])
+                for m in moves:
+                    new_node.room[m] = new_node.level
+
+                if new_node.is_finished(d):
+                    return new_node
+
+                generated_nodes += 1
+                queue.append(new_node)
+    return False
+
+def bestfs(d, size_x, size_y):
+    global generated_nodes
+    queue = init_queue(size_x, size_y)
+    while len(queue) != 0:
+        node = queue.pop()
+        for mx, my, moves in node.possible_moves():
+            if not any([node.room[m] for m in moves]):
+                new_node = node.copy(moves[-1])
+                for m in moves:
+                    new_node.room[m] = new_node.level
+
+                if new_node.is_finished(d):
+                    return new_node
+
+                generated_nodes += 1
+                queue.append(new_node)
+    return False
+
+
+if __name__ == '__main__':
+    solutions = {'bfs': bfs, 'dfs': dfs, 'bestfs': bestfs}
+
+    if len(sys.argv) == 5:
+        size_x = int(sys.argv[1])
+        size_y = int(sys.argv[2])
+        d = int(sys.argv[3])
+        solution = sys.argv[4]
+        if solution in solutions:
+            do = solutions[solution]
+            room = do(d, size_x, size_y)
+            if not room:
+                print 'No solution found'
+            else:
+                room.print_room()
+            print 'We generated %s nodes' % generated_nodes
+        else:
+            print 'python main.py size_x size_y d bfs|dfs|bestfs'
+    else:
+        print 'python main.py size_x size_y d bfs|dfs|bestfs'
