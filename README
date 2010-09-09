@@ -1,40 +1,11 @@
-=====Part B (50 points) =====
-You bought a cheap robot vacuum cleaner from a web shop. It looks nice, but
-soon you discover it has one problem: it cannot go straight. It performs
-L-shaped movements, advancing 4 cells in a direction and then turning for one
-more cell (see attached figure mov.png in images.zip). However, it is pretty
-efficient at cleaning the floor; actually the floor is so clean after the
-vacuum cleaner has passed over it that it is extremely shiny and slippery. So
-your task here will be to search a path that covers most of the floor with the
-particular patterns of movement illustrated in figure mov.png , with the
-following constraint: the robot should not step on a cell that was cleaned
-before, since it then slips and its behavior becomes unpredictable. The world
-is discretized in cells, and the robot can move in 8 directions when it is in a
-non-border cell. In mov.png you can see an example of the world with possible
-movements. The charge station is situated in the bottom left cell which
- is the starting point for the robot. This cell is considered to be already
-clean. With this set of movements it is usually impossible to clean all the
-cells in a squared-room. An example for a path in a 7x7 world can be seen in
-ex7x7.png (in images.zip). So your task is: calculate a path on a board of a
-given size NxN that leaves at most a given number d of cells dirty.
+To run use:
 
- 1. What search method do you think will find a solution in shortest time:
-breath-first or depth- first? Why? Reason about the answer without taking into
-account experimental results.( 5 p)
+python code/main.py 
 
- 2. Write a program that solves this problem with the depth-first method.
-Execute the program for an  11x11 board leaving a maximum of 5 dirty nodes.
-Write down the number of nodes that were expanded.( 15 p)
+The program accepts the following arguments or no arguments:
 
- 3. Write a program that solves this problem with the breath-first method.
-Execute the program for a  11x11 board leaving a maximum of 5 dirty nodes.
-Write down the number of nodes that were expanded.( 15 p)
+python code/main.py size_x size_y d bfs|dfs|bestfs
 
- 4. Write a program that solves this problem with the best-first method.
-Execute the program with the same scenarios as before. Write down the number
-nodes that were expanded.( 5 p)
+example:
 
- 5. Compare the number of expanded nodes from the three methods. Will the
-"ranking" of methods be always the same, no matter which board size or allowed
-error is specified?( 10 p)
-
+python code/main.py 11 11 5 bfs
