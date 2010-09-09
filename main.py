@@ -132,7 +132,7 @@ def priority(node, moves):
                     if node.room[m] != 0:
                         prio += 1
                 except KeyError:
-                    pass
+                    prio += 1
     return prio
 
 
